@@ -33,7 +33,7 @@ class ProductManager {
         if (productById) {
             return productById
         } else {
-            console.error(`No existe ningún producto con el ID ${id}`)
+            console.log(`No existe ningún producto con el ID ${id}`)
         }
     }
 }
@@ -70,3 +70,5 @@ products.addProducts(
 console.log(products.getProducts())
 console.log(`-------------------------------------------------------------------------------`)
 console.log(products.getProductById(1))
+console.log(`-------------------------------------------------------------------------------`)
+console.log(products.getProductById(5))
