@@ -77,6 +77,26 @@ class ProductManager {
         }
     }
 
+    async deleteProduct(id) {
+        try {
+            let existingProducts = await this.readProducts();
+            const indexToRemove = existingProducts.findIndex(p => p.id === id);
+
+            if (indexToRemove !== -1) {
+                const removedProduct = existingProducts.splice(indexToRemove, 1);
+                await fs.promises.writeFile(this.path, JSON.stringify(existingProducts, null, 2), 'utf-8');
+                console.log(`Producto con ID ${id} eliminado correctamente.`);
+                console.log('Producto eliminado:', removedProduct[0]);
+
+                await this.getProducts();
+            } else {
+                console.log(`No se encontró ningún producto con el ID ${id}`);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
+
 }
 
 const productManager = new ProductManager();
@@ -108,7 +128,7 @@ productManager.addProduct(
 )
 
 productManager.addProduct(
-    'CAMPERA ADIDAS RUNNING OWN THE RUN NEGRA', 
+    'CAMPERA ADIDAS RUNNING OWN THE RUN NEGRA',
     'Rétate a correr bajo la lluvia y termina sintiéndote fuerte, seguro y listo para lo que viene. Ponete esta campera de running ADIDAS para sentir el soporte que necesitas en el camino. Repele el aire frío y la lluvia ligera mientras te permite moverte con libertad. Los detalles reflectantes te hacen más visible en condiciones de poca luz. Regular fit. Cuello alto con capucha. Puños elastizados. Bolsillos laterales con pequeño bolsillo interno con cierre. Cintura con cordón de ajuste. Logo ADIDAS y detalles en estampado reflectivos.',
     87.999,
     'No hay imagen',
@@ -126,8 +146,10 @@ productManager.addProduct(
 
 
 const searchId = 5;
-
 productManager.getProductById(searchId);
+
+const deleteProductId = 9;
+productManager.deleteProduct(deleteProductId);
 
 productManager.getProducts();
 
