@@ -15,7 +15,7 @@ class ProductManager {
         }
     }
 
-    async showProducts() {
+    async getProducts() {
         try {
             const products = await this.readProducts();
             console.log('Lista de Productos:');
@@ -27,17 +27,17 @@ class ProductManager {
 
     async addProduct(title, description, price, thumbnail, code, stock) {
         try {
-            // Leer productos existentes
-            let existingProducts = await this.readProducts();
+            if (!title || !description || !price || !thumbnail || !code || !stock) {
+                console.log("Todos los campos son obligatorios");
+                return;
+            }
 
-            // Obtener el próximo ID disponible
+            let existingProducts = await this.readProducts();
             const newId = existingProducts.length > 0 ? existingProducts[existingProducts.length - 1].id + 1 : 1;
 
-            // Verificar duplicados
             if (existingProducts.some(p => p.code === code)) {
                 console.log(`Ya existe un producto con el código ${code}`);
             } else {
-                // Agregar nuevo producto con el nuevo ID
                 let newProduct = {
                     id: newId,
                     title,
@@ -50,17 +50,16 @@ class ProductManager {
 
                 existingProducts.push(newProduct);
 
-                // Escribir productos actualizados al archivo
                 await fs.promises.writeFile(this.path, JSON.stringify(existingProducts, null, 2), 'utf-8');
                 console.log(`Producto ${title} agregado correctamente.`);
 
-                // Mostrar todos los productos después de agregar uno
                 await this.showProducts();
             }
         } catch (error) {
             console.log('Error:', error);
         }
     }
+
 
     async getProductById(id) {
         try {
@@ -77,11 +76,9 @@ class ProductManager {
             console.log('Error:', error);
         }
     }
+
 }
 
-
-
-// Ejemplo de uso
 const productManager = new ProductManager();
 
 productManager.addProduct(
@@ -111,11 +108,34 @@ productManager.addProduct(
 )
 
 productManager.addProduct(
-    'CAMPERA ADIDAS RUNNING OWN THE RUN NEGRA', 'Rétate a correr bajo la lluvia y termina sintiéndote fuerte, seguro y listo para lo que viene. Ponete esta campera de running ADIDAS para sentir el soporte que necesitas en el camino. Repele el aire frío y la lluvia ligera mientras te permite moverte con libertad. Los detalles reflectantes te hacen más visible en condiciones de poca luz. Regular fit. Cuello alto con capucha. Puños elastizados. Bolsillos laterales con pequeño bolsillo interno con cierre. Cintura con cordón de ajuste. Logo ADIDAS y detalles en estampado reflectivos.',
+    'CAMPERA ADIDAS RUNNING OWN THE RUN NEGRA', 
+    'Rétate a correr bajo la lluvia y termina sintiéndote fuerte, seguro y listo para lo que viene. Ponete esta campera de running ADIDAS para sentir el soporte que necesitas en el camino. Repele el aire frío y la lluvia ligera mientras te permite moverte con libertad. Los detalles reflectantes te hacen más visible en condiciones de poca luz. Regular fit. Cuello alto con capucha. Puños elastizados. Bolsillos laterales con pequeño bolsillo interno con cierre. Cintura con cordón de ajuste. Logo ADIDAS y detalles en estampado reflectivos.',
     87.999,
     'No hay imagen',
     'SKU 100020H58592001',
     3);
+
+productManager.addProduct(
+    `MEDIAS SOQUETES PACK X3 ADIDAS LIGHT`,
+    `Caminá con comodidad con este trío de medias tobilleras confeccionadas en un tejido fino y ligero. Incorporan un refuerzo tejido en el arco que aporta mayor sujeción y un mejor ajuste. El logotipo de ADIDAS bordado debajo del puño cierra el look.`,
+    7.499,
+    `No hay Imagen`,
+    `SKU 100040DZ940000`,
+    15);
+
+
+
+const searchId = 5;
+
+productManager.getProductById(searchId);
+
+productManager.getProducts();
+
+
+
+
+
+
 
 
 

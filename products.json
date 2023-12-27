@@ -34,5 +34,14 @@
     "thumbnail": "No hay imagen",
     "code": "SKU 100020H58592001",
     "stock": 3
+  },
+  {
+    "id": 5,
+    "title": "MEDIAS SOQUETES PACK X3 ADIDAS LIGHT",
+    "description": "Caminá con comodidad con este trío de medias tobilleras confeccionadas en un tejido fino y ligero. Incorporan un refuerzo tejido en el arco que aporta mayor sujeción y un mejor ajuste. El logotipo de ADIDAS bordado debajo del puño cierra el look.",
+    "price": 7.499,
+    "thumbnail": "No hay Imagen",
+    "code": "SKU 100040DZ940000",
+    "stock": 15
   }
 ]
