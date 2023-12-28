@@ -53,7 +53,7 @@ class ProductManager {
                 await fs.promises.writeFile(this.path, JSON.stringify(existingProducts, null, 2), 'utf-8');
                 console.log(`Producto ${title} agregado correctamente.`);
 
-                await this.showProducts();
+                await this.getProducts();
             }
         } catch (error) {
             console.log('Error:', error);
@@ -87,6 +87,39 @@ class ProductManager {
                 await fs.promises.writeFile(this.path, JSON.stringify(existingProducts, null, 2), 'utf-8');
                 console.log(`Producto con ID ${id} eliminado correctamente.`);
                 console.log('Producto eliminado:', removedProduct[0]);
+
+                await this.getProducts();
+            } else {
+                console.log(`No se encontró ningún producto con el ID ${id} para eliminar`);
+            }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
+
+    async updateProduct(id, updatedProduct) {
+        try {
+            let existingProducts = await this.readProducts();
+            const indexToUpdate = existingProducts.findIndex(p => p.id === id);
+
+            if (indexToUpdate !== -1) {
+                updatedProduct.id = id;
+
+               
+                const reorderedProduct = {
+                    id: id,
+                    title: updatedProduct.title,
+                    description: updatedProduct.description,
+                    price: updatedProduct.price,
+                    thumbnail: updatedProduct.thumbnail,
+                    code: updatedProduct.code,
+                    stock: updatedProduct.stock
+                };
+
+                existingProducts[indexToUpdate] = reorderedProduct;
+
+                await fs.promises.writeFile(this.path, JSON.stringify(existingProducts, null, 2), 'utf-8');
+                console.log(`Producto con ID ${id} actualizado correctamente.`);
 
                 await this.getProducts();
             } else {
@@ -150,6 +183,19 @@ productManager.getProductById(searchId);
 
 const deleteProductId = 9;
 productManager.deleteProduct(deleteProductId);
+
+const productIdToUpdate = 2;
+const updatedProductData = {
+    id: productIdToUpdate,
+    title: 'Nuevo Nombre del Producto',
+    description: 'Nueva Descripción del Producto',
+    price: 9999,
+    thumbnail: 'Nueva URL de la Imagen',
+    code: 'Nuevo Código del Producto',
+    stock: 20
+};
+
+productManager.updateProduct(productIdToUpdate, updatedProductData)
 
 productManager.getProducts();
 
