@@ -105,7 +105,7 @@ class ProductManager {
             if (indexToUpdate !== -1) {
                 updatedProduct.id = id;
 
-               
+
                 const reorderedProduct = {
                     id: id,
                     title: updatedProduct.title,
