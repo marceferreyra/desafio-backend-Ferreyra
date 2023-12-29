@@ -5,24 +5,17 @@ class ProductManager {
         this.path = './products.json';
     }
 
-    async readProducts() {
+    async getProducts() {
         try {
             let data = await fs.promises.readFile(this.path, 'utf-8');
-            return JSON.parse(data);
+            const products = JSON.parse(data);
+            return products || []
+
         } catch (error) {
             console.log('Error al obtener los productos:', error);
         }
     }
 
-    async getProducts() {
-        try {
-            const products = await this.readProducts();
-            console.log('Lista de Productos:');
-            console.log(products);
-        } catch (error) {
-            console.log('Error:', error);
-        }
-    }
 
     async addProduct(title, description, price, thumbnail, code, stock) {
         try {
@@ -31,7 +24,7 @@ class ProductManager {
                 return;
             }
 
-            let existingProducts = await this.readProducts();
+            let existingProducts = await this.getProducts();
             const newId = existingProducts.length > 0 ? existingProducts[existingProducts.length - 1].id + 1 : 1;
 
             if (existingProducts.some(p => p.code === code)) {
@@ -62,7 +55,7 @@ class ProductManager {
 
     async getProductById(id) {
         try {
-            const products = await this.readProducts();
+            const products = await this.getProducts();
             const product = products.find(p => p.id === id);
 
             if (product) {
@@ -78,7 +71,7 @@ class ProductManager {
 
     async deleteProduct(id) {
         try {
-            let existingProducts = await this.readProducts();
+            let existingProducts = await this.getProducts();
             const indexToRemove = existingProducts.findIndex(p => p.id === id);
 
             if (indexToRemove !== -1) {
@@ -98,14 +91,11 @@ class ProductManager {
 
     async updateProduct(id, updatedProduct) {
         try {
-            let existingProducts = await this.readProducts();
+            let existingProducts = await this.getProducts();
             const indexToUpdate = existingProducts.findIndex(p => p.id === id);
 
             if (indexToUpdate !== -1) {
                 updatedProduct.id = id;
-
-
-
 
                 await fs.promises.writeFile(this.path, JSON.stringify(existingProducts, null, 2), 'utf-8');
                 console.log(`Producto con ID ${id} actualizado correctamente.`);
@@ -118,7 +108,6 @@ class ProductManager {
             console.log('Error:', error);
         }
     }
-
 }
 
 const productManager = new ProductManager();
@@ -186,6 +175,7 @@ const updatedProductData = {
 
 productManager.updateProduct(productIdToUpdate, updatedProductData)
 
-productManager.getProducts();
-
-
+productManager.getProducts().then(productList => {
+    console.log('Lista de productos:');
+    console.log(productList);
+});
