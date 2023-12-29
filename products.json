@@ -52,5 +52,14 @@
     "thumbnail": "No hay imagen",
     "code": "SKU 700013026949400",
     "stock": 4
+  },
+  {
+    "id": 7,
+    "title": "remera",
+    "description": "remera blanca algodon",
+    "price": 12.339,
+    "thumbnail": "no hay imagen",
+    "code": "SKU 4544145",
+    "stock": 5
   }
 ]
