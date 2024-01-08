@@ -62,15 +62,18 @@ class ProductManager {
         try {
             const products = await this.getProducts();
             const product = products.find(p => p.id === id);
-
+    
             if (product) {
                 console.log('Producto encontrado:');
                 console.log(product);
+                return product; 
             } else {
                 console.log(`No se encontró ningún producto con el ID ${id}`);
+                return null;  
             }
         } catch (error) {
             console.error('Error:', error);
+            throw error;
         }
     }
 
@@ -199,3 +202,6 @@ const productManager = new ProductManager();
     console.log('Lista de productos:');
     console.log(productList);
 })();
+
+
+module.exports = ProductManager;
