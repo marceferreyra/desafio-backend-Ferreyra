@@ -6,13 +6,22 @@ class ProductManager {
     }
 
     async getProducts() {
-        try {
+        try {          
+            const fileExists = await fs.access(this.path)
+                .then(() => true)
+                .catch(() => false);
+    
+            if (!fileExists) {              
+                await fs.writeFile(this.path, '[]', 'utf-8');
+            }
+                
             const data = await fs.readFile(this.path, 'utf-8');
             const products = JSON.parse(data);
+    
             return products || [];
         } catch (error) {
             console.error('Error al obtener los productos:', error);
-            throw error; // Re-lanzar el error para que pueda ser manejado por el código que llama a esta función
+            throw error;
         }
     }
 
